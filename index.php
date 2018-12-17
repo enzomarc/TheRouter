@@ -2,11 +2,16 @@
 
 require 'vendor/autoload.php';
 
-var_dump($_GET);
-die();
+$router = new App\Router\Router($_GET['url']);
+$poison = new App\Poison\Poison();
 
-$router = new App\Router($_GET['url']);
+$router->get('/contact', function () {
+    $poison->render('contact.php');
+})->name('contact');
 
 $router->get('/', function () {
-    echo "Hello World!";
+    echo "Je suis la page accueil<br>";
+    echo $router->url('contact');
 });
+
+$router->run();
