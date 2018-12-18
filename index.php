@@ -3,10 +3,9 @@
 require 'vendor/autoload.php';
 
 $router = new App\Router\Router($_GET['url']);
-$poison = new App\Poison\Poison();
 
 $router->get('/contact', function () {
-    $poison->render('contact.php');
+    echo "Poison is coming !";
 })->name('contact');
 
 $router->get('/', function () {

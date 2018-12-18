@@ -9,8 +9,10 @@
     ],
     "autoload": {
         "psr-4": {
-            "TheRouter\\": "app"
+            "App\\": "src"
         }
     },
-    "require": {}
+    "require": {
+        "php": "^7.2"
+    }
 }
