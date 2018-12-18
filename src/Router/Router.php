@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Router;
+namespace TheRouter\Router;
 
 
 class Router
@@ -11,9 +11,13 @@ class Router
     public $namedRoutes = [];
     public $controllersPath = "App\\Controller\\";
 
-    public function __construct(string $url)
+    public function __construct(string $url = null)
     {
-        $this->url = $url;
+        if (is_null($url)) {
+            $this->url = $_SERVER['REQUEST_URI'];
+        } else {
+            $this->url = $url;
+        }
     }
 
     public function get(string $path, $callable, string $name = null) : Route
