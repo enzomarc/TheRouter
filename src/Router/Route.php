@@ -10,23 +10,35 @@ class Route
     private $callable;
     private $matches = [];
     private $params = [];
-    private $controllerPath;
     private $router;
 
-    public function __construct(Router $router, string $path, $callable, string $controllerPath = null)
+    public function __construct(Router $router, string $path, $callable)
     {
         $this->path = trim($path, '/');
         $this->callable = $callable;
-        $this->controllerPath = $controllerPath;
         $this->router = $router;
     }
 
-    public function match(string $url)
+    public function match(string $url) : boolean
     {
         $url = trim($url, '/');
         $path = preg_replace_callback('#:([\w]+)#', [$this, 'paramMatch'], $this->path);
         $regex = "#^$path$#i";
 
+        if (!preg_match($regex, $url, $matches)) {
+            return false;
+        }
+
+        array_shift($matches);
+        $this->matches = $matches;
+
+        return true;
+    }
+
+    public function setMatch(string $regex) : boolean
+    {
+        $url = $this->path;
+        
         if (!preg_match($regex, $url, $matches)) {
             return false;
         }
@@ -50,7 +62,7 @@ class Route
     {
         if (is_string($this->callable)) {
             $params = explode('@', $this->callable);
-            $controller = $this->controllerPath . $params[0];
+            $controller = Router::$controllersPath . $params[0];
             $controller = new $controller();
 
             return call_user_func_array([$controller, $params[1]], $this->matches);
@@ -59,7 +71,7 @@ class Route
         }
     }
 
-    public function with(string $param, string $regex)
+    public function where(string $param, string $regex)
     {
         $this->params[$param] = str_replace('(', '(?:', $regex);
 

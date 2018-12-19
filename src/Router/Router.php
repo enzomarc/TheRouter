@@ -9,7 +9,7 @@ class Router
     private $url;
     private $routes = [];
     public $namedRoutes = [];
-    public $controllersPath = "App\\Controller\\";
+    public static $controllersPath = "App\\Controller\\";
 
     public function __construct(string $url = null)
     {
@@ -68,6 +68,11 @@ class Router
         }
 
         return $this->namedRoutes[$name]->getUrl($params);
+    }
+
+    public static function setDefaultNamespace(string $namespace) : void
+    {
+        self::$controllersPath = $namespace;
     }
 
 }
