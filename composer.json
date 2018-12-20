@@ -1,6 +1,7 @@
 {
     "name": "focus237/the-router",
     "description": "Simple PHP Router",
+    "license": "MIT",
     "authors": [
         {
             "name": "focus237",
