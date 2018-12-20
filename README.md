@@ -24,11 +24,11 @@ Nothing special is required for Apache to work. We've include the  `.htaccess`  
 
 Below is an example of an working  `.htaccess`  file used by the-router.
 
-Simply create a new  `.htaccess`  file in your projects  `public`  directory and paste the contents below in your newly created file. This will redirect all requests to your  `index.php`  file.
+Simply create a new  `.htaccess`  file in your root directory and paste the contents below in your newly created file. This will redirect all requests to your  `index.php`  file. According your `index.php` is in `public` folder, you'll write something like this
 ```
 RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+RewriteRule ^(.*)$ /public/index.php?url=$1 [QSA,L]
 ```
 ### Setting up Ngninx
 If you are using Nginx please make sure that url-rewriting is enabled.
@@ -37,7 +37,7 @@ You can easily enable url-rewriting by adding the following configuration for th
 
 ```
 location / {
-    try_files $uri $uri/ /index.php?$query_string;
+    try_files $uri $uri/ /public/index.php?$query_string;
 }
 ```
 
