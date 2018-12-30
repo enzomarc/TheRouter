@@ -16,6 +16,6 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 
-/.idea
+.idea
 index.php
 composer.phar
