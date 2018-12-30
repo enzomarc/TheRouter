@@ -10,6 +10,7 @@ class Route
     private $callable;
     private $matches = [];
     private $params = [];
+    private $globals = [];
     private $router;
 
     public function __construct(Router $router, string $path, $callable)
@@ -19,7 +20,7 @@ class Route
         $this->router = $router;
     }
 
-    public function match(string $url) : boolean
+    public function match(string $url)
     {
         $url = trim($url, '/');
         $path = preg_replace_callback('#:([\w]+)#', [$this, 'paramMatch'], $this->path);
@@ -64,6 +65,7 @@ class Route
             $params = explode('@', $this->callable);
             $controller = Router::$controllersPath . $params[0];
             $controller = new $controller();
+            extract($this->globals);
 
             return call_user_func_array([$controller, $params[1]], $this->matches);
         } else {
@@ -78,6 +80,18 @@ class Route
         return $this;
     }
 
+    public function with(array $params): Route
+    {
+        foreach ($params as $param => $value) {
+            if (!array_key_exists($param, $globals))
+                $this->globals[$param] = $value;
+        }
+
+        extract($this->globals);
+
+        return $this;
+    }
+
     public function getUrl(array $params) : string
     {
         $path = $this->path;
@@ -86,15 +100,13 @@ class Route
             $path = str_replace(":$k", $v, $path);
         }
 
-        return $path;
+        return $path == null || $path == '' ? '/' : $path;
     }
 
     public function name(string $name)
     {
         if (!array_key_exists($name, $this->router->namedRoutes))
-        {
             $this->router->namedRoutes[$name] = $this;
-        }
 
         return $this;
     }

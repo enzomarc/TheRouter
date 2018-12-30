@@ -5,7 +5,7 @@ Add the latest version of the-router project running this command.
     composer require focus237/the-router
  
 ## Features
--   Basic routing (`GET`,  `POST`).
+-   Basic routing (`GET`,  `POST`, `RESOURCE`).
 -   Regular Expression Constraints for parameters.
 -   Named routes.
 -   Generating url to routes.
@@ -89,18 +89,19 @@ Here you can see a list over all available routes:
 
     $router->get($url, $callback, $name);
     $router->post($url, $callback, $name);
+    $router->resource($name, $controller);
 
  `$name` is the route name. See named routes section for more informations. 
 
 ### Routes parameters
 You'll properly wondering by know how you parse parameters from your urls. For example, you might want to capture the users id from an url. You can do so by defining route-parameters.
 
-    $router->get('/user/{id}', function ($id) {
-		return 'User with id: ' . $id;
+    $router->get('/user/:id', function ($id) {
+		return 'User with id : ' . $id;
 	});
 You may define as many route parameters as required by your route:
 
-    $router->get('/posts/{post}/comments/{comment}', function ($post, $comment) {
+    $router->get('/posts/:post/comments/:comment', function ($post, $comment) {
 		// ...
 	});
 
@@ -108,19 +109,19 @@ You may define as many route parameters as required by your route:
 
 You may constrain the format of your route parameters using the where method on a route instance. The where method accepts the name of the parameter and a regular expression defining how the parameter should be constrained:
 
-    $router->get('/user/{name}', function ($name) {
+    $router->get('/user/:name', function ($name) {
       
 	    // ... do stuff
       
     })->where('name', '[A-Za-z]+');
     
-    $router->get('/user/{id}', function ($id) {
+    $router->get('/user/:id', function ($id) {
       
 	    // ... do stuff
       
     })->where('id', '[0-9]+');
     
-    $router->get('/user/{id}/{name}', function ($id, $name) {
+    $router->get('/user/:id/:name', function ($id, $name) {
       
 	    // ... do stuff
       
@@ -152,7 +153,7 @@ Once you have assigned a name to a given route, you may use the route's name whe
 
 If the named route defines parameters, you may pass the parameters as the second argument to the `url` function. The given parameters will automatically be inserted into the URL in their correct positions:
 
-    $router->get('/user/{id}/profile', function ($id) {
+    $router->get('/user/:id/profile', function ($id) {
 		//
 	})->name('profile');
 	
